@@ -9,24 +9,25 @@ def init_browser():
     executable_path = {'executable_path': 'chromedriver.exe'}
     return Browser('chrome', **executable_path, headless=False)
 
-def scrape ():
+def scrape():
     browser = init_browser()
-    Mars_dict = {}
+    # Mars_dict = {}
 
     url = 'https://mars.nasa.gov/news/'
     browser.visit(url)
 
     html = browser.html
-  
-    info_soup = BeautifulSoup(html, 'html.parser')
+    soup = BeautifulSoup(html, 'html.parser')
 
-    news_title = info_soup.find_all('div', class_='content_title')[1].text
-    news_p = info_soup.find_all('div', class_='article_teaser_body')[0].text
+    title = soup.find_all (class_="content_title")
+    title_info = soup.find_all (class_="article_teaser_body")
 
-    # print(news_title)
-    # print("--------------------------------------------------------------------")
-    # print(news_p)
-
+    news_title = title[1].find('a').text
+    news_p = title_info[0].text
+    # news_p = soup.find('div', class_='article_teaser_body')
+    print(news_title)
+    print("--------------------------------------------------------------------")
+    print(news_p)
 
     jet_url = "https://www.jpl.nasa.gov/spaceimages/?search=&category=Mars"
     jet_gov = "https://www.jpl.nasa.gov/"
@@ -55,45 +56,62 @@ def scrape ():
     df.columns =['Description', 'Mars'] 
     df.set_index('Description', inplace=True)
 
-    mars_facts = df.to_html('Mars_facts.html')
+    # df.to_html('Mars_facts.html')
+    mars_facts = df.to_html(header=True, index=True)
+
+    geology_url = "https://astrogeology.usgs.gov/search/results?q=hemisphere+enhanced&k1=target&v1=Mars"
+    browser.visit(geology_url)
+
+    html = browser.html
+
+    geology_soup = BeautifulSoup(html, "html.parser")
+
+    main_geology = "https://astrogeology.usgs.gov"
 
 
-    USGS_url = "https://astrogeology.usgs.gov/search/results?q=hemisphere+enhanced&k1=target&v1=Mars"
-    browser.visit(USGS_url)
-    Hem_html = browser.html
-    hemispheres_soup = BeautifulSoup(Hem_html, 'html.parser')
+    class_url = geology_soup.find_all("div", class_="item")
 
+    # Create empty list for each Hemisphere URL.
+    hemisphere_url = []
 
-    hemisphere_image_urls = []
-
-    products = hemispheres_soup.find("div", class_ = "collapsible results" )
-    hemisphere = products.find_all("div", class_="item")
-
-
-    for img in hemisphere:
-        title = img.find("h3").text
-    #     title = title.replace("Enhanced", "")
-        large_link = img.find("a")["href"]
-        img_link = "https://astrogeology.usgs.gov/" + large_link    
-        
-        browser.visit(img_link)
+    for sphere in class_url:
+        sphere_url = sphere.find('a')['href']
+        hemisphere_url.append(sphere_url)
     
-        HM_html = browser.html
-        HM_soup = BeautifulSoup(HM_html, 'html.parser')
-        
-        enlarge_img = HM_soup.find("div", class_="downloads")
-        hemisphere_url = enlarge_img.find("a")["href"]
-        hemisphere_image_urls.append({"title": title, "img_url": hemisphere_url})
+    hemisphere_image_urls = []
+    for img in hemisphere_url:
+        img_url = main_geology + img
+    
+        browser.visit(img_url)
+    
+        html = browser.html
 
-    Mars_dict = {    
-        "news_title": news_title,
-        "news_p": news_p,
-        "featured_image_url": featured_image_url,
-        "mars_facts": str(mars_facts),
-        "hemisphere_images": hemisphere_image_urls}
+        sphere_soup = BeautifulSoup(html, "html.parser")
+
+        img_title = sphere_soup.find("h2", class_="title").text
+    
+        title= img_title.split(' Enhanced')[0]
+      
+        img_url = sphere_soup.find("li").a['href']
+    
+        hemisphere_image_urls.append({'title': title, 'img_url': img_url})
+        # print(hemisphere_image_url)
+
+
+        Mars_dict = {    
+            "news_title": news_title,
+            "news_p": news_p,
+            "featured_image_url": featured_image_url,
+            "mars_facts": str(mars_facts),
+            "mars_facts": mars_facts,
+            "hemisphere_images": hemisphere_image_urls
+            }
+
+    
         
     browser.quit()
-    return Mars_dict
+    return(Mars_dict)
+
 
 
 

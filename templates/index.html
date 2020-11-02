@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+
+    <meta charset="UTF-8">
+    <title>Mission to Mars</title>
+
+    <!-- Bring in our bootstrap stylesheet -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+        integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+
+    <!-- jQuery and JS bundle w/ Popper.js -->
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+
+<!--     
+    <link rel="stylesheet" href="style.css"> -->
+</head>
+<body>
+    <div class="container">
+        <div class="jumbotron text-center">
+        <h1 class="display-4">Mission to Mars</h1>
+        
+        <hr class="my-4">
+        
+        <a class="btn btn-primary btn-lg" href="/scrape" role="button">Scrape more Data</a>
+        </div>
+    </div>
+
+        <div class="row">
+            <div class="col-md-12">
+              <h2><u>Latest Mars News</u></h2>
+            </div>
+        
+        </div>
+
+    </br>
+    
+        <!-- <div class="row">
+            <div class="col-md-12">
+                <h4>{{mars_results.news_title}}</h4>
+                <p>{{mars_results.news_p}}</p>
+            </div>
+        </div> -->
+        <hr>
+        <!-- left image -->
+        <div class="row">
+            <div class="col-md-8">
+            <h3><b>Featured Mars Image</b></h3>
+            <img src= {{ mars_results.featured_image_url}} height= '500px' width='700px'>
+            
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+            
+            <h3><b>Mars facts</b></h3>
+            <p>{{mars_results.mars_facts | safe }}</p>
+
+        </div>
+        </div> 
+
+        <div class="row">
+            <div class="col-md-12">
+              <h2 class="text-center"><u>Mars hemispheres</u></h2> 
+            </div>
+        </div>
+            <hr>
+        
+        <div class="row">
+             {% for hemisphere in mars_results["hemisphere_images"] %}
+             <div class = "col-md-6">
+            
+                 <img src="{{img["img_url"]}} width="200px" height="200px"> -->
+             -->
+                 <!-- <img src{{img ["img_url"]}} height= '200px' width = '200px'> --> -->
+               
+                <h4> {{img["title"]}} </h4>  
+                <!-- <h4>{{img["title"]}}</h4> -->
+              </div>    
+             </div>
+             
+       </div>
+             {% endfor %}
+       
+  
+    </div>
+
+
+</body>
+
+</html>
